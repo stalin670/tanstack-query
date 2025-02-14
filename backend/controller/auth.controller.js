@@ -90,8 +90,18 @@ const logout = async (req, res) => {
   }
 };
 
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   signup,
   login,
   logout,
+  getMe,
 };
