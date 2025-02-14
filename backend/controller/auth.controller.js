@@ -26,11 +26,11 @@ const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = {
+    const user = new User({
       name,
       email,
       password: hashedPassword,
-    };
+    });
 
     if (user) {
       generateTokenAndSetCookie(user._id, res);
@@ -38,7 +38,7 @@ const signup = async (req, res) => {
       return res.status(201).json({
         _id: user._id,
         name: user.name,
-        email: newUser.email,
+        email: user.email,
       });
     } else {
       return res.status(400).json({
@@ -46,6 +46,7 @@ const signup = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
