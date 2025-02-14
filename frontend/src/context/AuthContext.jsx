@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  // const navigate = useNavigate();
 
   // Check if user is already authenticated
   useEffect(() => {
@@ -21,9 +23,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      await axiosInstance.post("/login", { email, password });
-      const res = await axiosInstance.get("/me"); 
-      setUser(res.data.user);
+      const resLogin = await axiosInstance.post("/login", { email, password });
+      const res = await axiosInstance.get("/me");
+      console.log(res);
+      setUser(res.data);
+      console.log(user, resLogin);
+      return resLogin;
+      // navigate("/");
     } catch (error) {
       console.error(error.response.data.error);
     }
